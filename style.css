@@ -1,0 +1,790 @@
+/* ============================================================
+   СБРОС СТИЛЕЙ И БАЗОВЫЕ ПЕРЕМЕННЫЕ
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Тёмная тема (по умолчанию) */
+  --bg-gradient-start: #1e3c72;
+  --bg-gradient-mid: #2a5298;
+  --bg-gradient-accent: #6e3b8e;
+  --text-color: #fff;
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-border: rgba(255, 255, 255, 0.18);
+  --input-bg: rgba(255, 255, 255, 0.1);
+  --input-border: rgba(255, 255, 255, 0.2);
+  --input-focus-border: #a8d0ff;
+  --input-focus-shadow: rgba(168, 208, 255, 0.3);
+  --btn-gradient: linear-gradient(135deg, #ff6b9d, #c06ee5);
+  --btn-shadow: rgba(192, 110, 229, 0.4);
+  --btn-hover-shadow: rgba(192, 110, 229, 0.6);
+  --chat-bg: rgba(255, 255, 255, 0.05);
+  --chat-border: #ffd700;
+  --user-bubble-bg: linear-gradient(135deg, #ff6b9d, #ee5a6f);
+  --ai-bubble-bg: rgba(255, 255, 255, 0.15);
+  --clear-btn-bg: rgba(255, 255, 255, 0.1);
+  --clear-btn-border: rgba(255, 255, 255, 0.3);
+  --clear-btn-hover-bg: rgba(255, 100, 100, 0.3);
+  --clear-btn-hover-border: #ff6b6b;
+  --footer-opacity: 0.7;
+  --theme-toggle-bg: rgba(255, 255, 255, 0.1);
+  --theme-toggle-border: rgba(255, 255, 255, 0.2);
+  --star-opacity: 0.3;
+}
+
+/* Светлая тема */
+[data-theme="light"] {
+  --bg-gradient-start: #e0eafc;
+  --bg-gradient-mid: #cfdef3;
+  --bg-gradient-accent: #f5e0f0;
+  --text-color: #1a1a2e;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(0, 0, 0, 0.1);
+  --input-bg: rgba(0, 0, 0, 0.03);
+  --input-border: rgba(0, 0, 0, 0.15);
+  --input-focus-border: #2a5298;
+  --input-focus-shadow: rgba(42, 82, 152, 0.2);
+  --chat-bg: rgba(0, 0, 0, 0.02);
+  --chat-border: #2a5298;
+  --user-bubble-bg: linear-gradient(135deg, #ff6b9d, #ee5a6f);
+  --ai-bubble-bg: rgba(0, 0, 0, 0.08);
+  --clear-btn-bg: rgba(0, 0, 0, 0.05);
+  --clear-btn-border: rgba(0, 0, 0, 0.15);
+  --clear-btn-hover-bg: rgba(255, 100, 100, 0.2);
+  --clear-btn-hover-border: #ff6b6b;
+  --footer-opacity: 0.8;
+  --theme-toggle-bg: rgba(0, 0, 0, 0.05);
+  --theme-toggle-border: rgba(0, 0, 0, 0.15);
+  --star-opacity: 0;
+}
+
+/* ============================================================
+   ОСНОВНЫЕ СТИЛИ СТРАНИЦЫ
+   ============================================================ */
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+  min-height: 100vh;
+  color: var(--text-color);
+  padding: 20px;
+  overflow-x: hidden;
+  background: linear-gradient(-45deg, var(--bg-gradient-start), var(--bg-gradient-mid), var(--bg-gradient-accent), var(--bg-gradient-mid));
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+/* Анимация градиентного фона */
+@keyframes gradientBG {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Декоративные звёзды на фоне (видны только в тёмной теме) */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(1px 1px at 60% 70%, white, transparent),
+    radial-gradient(2px 2px at 80% 20%, white, transparent),
+    radial-gradient(1px 1px at 40% 90%, white, transparent),
+    radial-gradient(2px 2px at 90% 50%, white, transparent);
+  background-size: 200% 200%;
+  opacity: var(--star-opacity);
+  animation: twinkle 8s ease infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.7; }
+}
+
+/* ============================================================
+   КНОПКИ ТЕМЫ И ЯЗЫКА
+   ============================================================ */
+.theme-toggle,
+.lang-toggle {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: var(--theme-toggle-bg);
+  border: 1px solid var(--theme-toggle-border);
+  color: var(--text-color);
+  font-size: 1.2em;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+  z-index: 10;
+}
+.lang-toggle {
+  right: 70px; /* чтобы не накладывалась на кнопку темы */
+}
+.theme-toggle:hover,
+.lang-toggle:hover {
+  transform: scale(1.05);
+  background: var(--clear-btn-hover-bg);
+}
+
+/* ============================================================
+   ЗАГОЛОВОК
+   ============================================================ */
+h1 {
+  text-align: center;
+  font-size: 2.8em;
+  margin: 30px 0;
+  background: linear-gradient(90deg, var(--text-color), #a8d0ff, var(--text-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   СТЕКЛЯННАЯ КАРТОЧКА
+   ============================================================ */
+.card {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 35px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card h2 {
+  font-size: 1.6em;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ============================================================
+   ВЫБОР ПРОВАЙДЕРА (GPT / Gemini)
+   ============================================================ */
+.provider-switcher {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.provider-btn {
+  background: var(--clear-btn-bg);
+  border: 1px solid var(--clear-btn-border);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+.provider-btn:hover {
+  background: var(--clear-btn-hover-bg);
+}
+.provider-btn.active {
+  background: var(--btn-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px var(--btn-shadow);
+}
+
+/* ============================================================
+   ПАНЕЛЬ ВЫБОРА ПЕРСОНАЖА
+   ============================================================ */
+.character-panel {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Контейнер для выпадающих списков */
+.character-selectors {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+/* Стили выпадающих списков (категория и персонаж) */
+.preset-select {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  max-width: 220px;
+  transition: border-color 0.3s;
+}
+.preset-select:focus {
+  border-color: var(--input-focus-border);
+}
+
+/* Кнопка "Обычный" и будущие пресеты */
+.preset-btn {
+  background: var(--clear-btn-bg);
+  border: 1px solid var(--clear-btn-border);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.preset-btn:hover {
+  background: var(--clear-btn-hover-bg);
+}
+.preset-btn.active {
+  background: var(--btn-gradient);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px var(--btn-shadow);
+}
+
+/* ============================================================
+   ПОЛЕ ВВОДА И КНОПКИ ИНСТРУМЕНТОВ
+   ============================================================ */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Само поле вопроса */
+#ai-question {
+  flex: 1;
+  min-height: 90px;
+  padding: 15px;
+  font-size: 1em;
+  font-family: inherit;
+  color: var(--text-color);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
+  resize: vertical;
+  transition: all 0.3s ease;
+}
+#ai-question::placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+}
+#ai-question:focus {
+  outline: none;
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 20px var(--input-focus-shadow);
+}
+
+/* Иконки‑кнопки (голос, язык, фото, камера, файл) */
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 1.2em;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-btn i {
+  width: 20px;
+  height: 20px;
+}
+.icon-btn:hover {
+  background: var(--clear-btn-hover-bg);
+  transform: scale(1.05);
+}
+
+/* Состояние «прослушивания» (красная анимация) */
+.icon-btn.listening {
+  background: #ff4444;
+  color: #fff;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.5); }
+  70%  { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+}
+
+/* ============================================================
+   ПРЕВЬЮ ЗАГРУЖЕННОГО ФОТО
+   ============================================================ */
+.image-preview {
+  margin-top: 10px;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+.image-preview img {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+.remove-preview {
+  background: rgba(255, 0, 0, 0.7);
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   КНОПКА ОТПРАВКИ
+   ============================================================ */
+#ai-ask-btn {
+  margin-top: 15px;
+  padding: 14px 35px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #fff;
+  background: var(--btn-gradient);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px var(--btn-shadow);
+  transition: all 0.3s ease;
+}
+#ai-ask-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px var(--btn-hover-shadow);
+}
+#ai-ask-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================
+   ИСТОРИЯ ЧАТА
+   ============================================================ */
+#chat-history {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 15px;
+  margin-top: 20px;
+  background: var(--chat-bg);
+  border-radius: 15px;
+  border-left: 4px solid var(--chat-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+/* Кастомизация скроллбара */
+#chat-history::-webkit-scrollbar {
+  width: 6px;
+}
+#chat-history::-webkit-scrollbar-thumb {
+  background: var(--chat-border);
+  border-radius: 10px;
+}
+
+/* Блок одного сообщения */
+.message {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Аватарка (эмодзи) */
+.avatar {
+  font-size: 1.8em;
+  flex-shrink: 0;
+}
+
+/* Облачко сообщения */
+.bubble {
+  padding: 12px 16px;
+  border-radius: 15px;
+  max-width: 80%;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+/* Сообщение пользователя (справа) */
+.user-message {
+  flex-direction: row-reverse;
+}
+.user-message .bubble {
+  background: var(--user-bubble-bg);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* Сообщение AI (слева) */
+.ai-message .bubble {
+  background: var(--ai-bubble-bg);
+  color: var(--text-color);
+  border-bottom-left-radius: 4px;
+  backdrop-filter: blur(10px);
+}
+
+/* Индикатор "Думаю..." с анимацией точек */
+.thinking .bubble::after {
+  content: '...';
+  animation: dots 1.5s infinite;
+}
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* ============================================================
+   КНОПКИ ДЕЙСТВИЙ ПРИ НАВЕДЕНИИ НА СООБЩЕНИЕ
+   (копировать, поделиться, озвучить)
+   ============================================================ */
+.msg-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+  align-self: flex-start;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.message:hover .msg-actions {
+  opacity: 1;
+}
+.msg-actions button {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  opacity: 0.7;
+  padding: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+}
+.msg-actions button:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+}
+
+/* ============================================================
+   КНОПКА ОЧИСТКИ ЧАТА
+   ============================================================ */
+#clear-chat-btn {
+  background: var(--clear-btn-bg);
+  color: var(--text-color);
+  border: 1px solid var(--clear-btn-border);
+  padding: 10px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+#clear-chat-btn:hover {
+  background: var(--clear-btn-hover-bg);
+  border-color: var(--clear-btn-hover-border);
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   ПАНЕЛЬ ИНСТРУМЕНТОВ ПОД ИСТОРИЕЙ
+   (экспорт, поиск, счётчик, заметки)
+   ============================================================ */
+.chat-tools {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.tool-btn {
+  background: var(--clear-btn-bg);
+  border: 1px solid var(--clear-btn-border);
+  color: var(--text-color);
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-family: inherit;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tool-btn i {
+  width: 16px;
+  height: 16px;
+}
+.tool-btn:hover {
+  background: var(--clear-btn-hover-bg);
+}
+
+/* Поле поиска */
+.search-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-family: inherit;
+  flex: 1;
+  min-width: 120px;
+  outline: none;
+}
+.search-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
+/* Счётчик запросов */
+.counter {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+/* ============================================================
+   ПАНЕЛЬ ЗАМЕТОК (имя и предпочтения пользователя)
+   ============================================================ */
+.notes-panel {
+  margin-top: 10px;
+  padding: 15px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(10px);
+}
+.notes-panel label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color);
+  font-size: 0.9em;
+}
+.notes-panel input,
+.notes-panel textarea {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+  padding: 8px;
+  border-radius: 8px;
+  margin-top: 4px;
+  font-family: inherit;
+  font-size: 0.9em;
+}
+
+/* ============================================================
+   БЛОКИ КОДА ВНУТРИ СООБЩЕНИЙ
+   ============================================================ */
+.bubble pre {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  margin: 10px 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+[data-theme="light"] .bubble pre {
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.bubble code {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.9em;
+}
+.bubble :not(pre) > code {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   ФУТЕР
+   ============================================================ */
+footer {
+  text-align: center;
+  margin-top: 40px;
+  opacity: var(--footer-opacity);
+  font-size: 0.9em;
+  position: relative;
+  z-index: 1;
+}
+footer span {
+  color: #ff6b9d;
+}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width: 768px) {
+  .card {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 25px 20px;
+  }
+  h1 {
+    font-size: 2.2em;
+    margin: 20px 0;
+  }
+  .card h2 {
+    font-size: 1.4em;
+  }
+  #ai-question {
+    min-height: 80px;
+    font-size: 0.95em;
+  }
+  #ai-ask-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  h1 {
+    font-size: 1.8em;
+    margin: 15px 0;
+  }
+  .card {
+    max-width: 95%;
+    padding: 20px 15px;
+    border-radius: 15px;
+  }
+  .card h2 {
+    font-size: 1.2em;
+    flex-wrap: wrap;
+  }
+  #ai-question {
+    min-height: 70px;
+    font-size: 0.9em;
+    padding: 12px;
+  }
+  #ai-ask-btn {
+    padding: 12px;
+    font-size: 0.95em;
+  }
+  footer {
+    font-size: 0.85em;
+    padding: 15px 10px;
+  }
+  #clear-chat-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+  .lang-toggle {
+    right: 60px;
+  }
+}
+
+/* ============================================================
+   ОТКЛЮЧЕНИЕ ГОРИЗОНТАЛЬНОЙ ПРОКРУТКИ
+   ============================================================ */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ============================================================
+   МОДАЛКА КАМЕРЫ (создаётся из js/media.js)
+   ============================================================ */
+.camera-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+}
+
+.camera-modal video {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.camera-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ============================================================
+   ПРАВКИ ДЛЯ RTL (иврит)
+   ============================================================ */
+[dir="rtl"] .theme-toggle {
+  right: auto;
+  left: 20px;
+}
+
+[dir="rtl"] .lang-toggle {
+  left: 70px;
+}
+
+@media (max-width: 480px) {
+  [dir="rtl"] .lang-toggle {
+    left: 60px;
+  }
+}
